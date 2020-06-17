@@ -72,15 +72,11 @@ public class OctoHeatmapChart extends OctoBaseChart{
             this.xmapping = columnNames;
         }
         //this.heatmapPanel.setTargets(String.format("select %s from %s where dashboardid = \'%s\' and workunitname = \'%s\'", xaxis_cols,this.tableNameLarge,this.uid, this.workunitName));
-        //if xcolumn names are >1 then x is also z.
-        //store into table.
     }
     public void setYaxis(String columnNames){
         this.ymapping = columnNames;
         this.heatmapPanel.setTargets(String.format("select \"%s\" from %s where dashboardid = \'%s\' and workunitname = \'%s\' order by \"%s\"",this.ymapping,this.tableNameLarge,this.uid, this.workunitName,this.ymapping));
         this.heatmapPanel.setTargets(String.format("select %s from %s where dashboardid = \'%s\' and workunitname = \'%s\' order by \"%s\"", this.zmapping,this.tableNameLarge,this.uid, this.workunitName,this.ymapping));
-        //if ycolumn names are > 1 then y axis is also z
-        //store into table.
     }
     public void convertToDataFrameAndPersist(List<String> arr,String colHeader){
         List<Row> list=new ArrayList<>();
@@ -91,7 +87,6 @@ public class OctoHeatmapChart extends OctoBaseChart{
         listOfStructField.add(DataTypes.createStructField(colHeader, DataTypes.StringType, true));
         StructType structType=DataTypes.createStructType(listOfStructField);
         Dataset<Row> df_x = sparkWorker.createDataFrame(list,structType);
-        df_x.show();
         super.updateChartData(this.sparkWorker,df_x,this.uid,this.workunitClass,this.workunitName,this.summaryName,this.tableNameShort);
     }
     public void setDashboardtitle(String dashboardtitle){
