@@ -24,7 +24,7 @@ public class OctoTableChart extends OctoBaseChart {
         this.workunitClass = workunitClass;
         this.workunitName = workunitName;
         this.tableName=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1)).toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
-        this.updateChartData(spark,df,dashboarduid,workunitClass,workunitName,summaryname,this.tableName);
+        this.updateChartData(spark,df,dashboarduid,workunitClass,workunitName,wuRevision,summaryname,this.tableName);
     }
     public void setColumns(String cols){
         this.columns = cols;

@@ -23,7 +23,7 @@ public class OctoPieChart extends OctoBaseChart {
         this.workunitClass=workunitClass;
         this.workunitName=workunitname;
         this.tableName=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1)).toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
-        this.updateChartData(spark,df,dashboarduid,workunitClass,workunitname,summaryname,tableName);
+        this.updateChartData(spark,df,dashboarduid,workunitClass,workunitname,wuRevision,summaryname,tableName);
     }
 
     public void setColumns(String columns) {

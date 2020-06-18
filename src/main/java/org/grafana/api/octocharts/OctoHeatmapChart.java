@@ -23,6 +23,7 @@ public class OctoHeatmapChart extends OctoBaseChart{
     private final String tableNameShort;
     private final String workunitClass;
     private final String workunitName;
+    private final String wuRevision;
     private final String summaryName;
     public PlotlyHeatmapPanelChart heatmapPanel;
     public String xmapping;
@@ -40,10 +41,11 @@ public class OctoHeatmapChart extends OctoBaseChart{
         this.heatmapPanel.setTitle(workunitName.substring(workunitName.lastIndexOf('.') + 1) + "_" + wuRevision + "_" + summaryname.substring(summaryname.lastIndexOf('.') + 1));
         this.workunitClass = workunitClass;
         this.workunitName = workunitName;
+        this.wuRevision = wuRevision;
         this.summaryName = summaryname;
         this.tableNameLarge=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1) + "_1").toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
         this.tableNameShort=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1) + "_2").toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
-        super.updateChartData(this.sparkWorker,df,this.uid,this.workunitClass,this.workunitName,this.summaryName,this.tableNameLarge);
+        super.updateChartData(this.sparkWorker,df,this.uid,this.workunitClass,this.workunitName,wuRevision,this.summaryName,this.tableNameLarge);
     }
 
     public void setXaxis(String columnNames){
@@ -87,7 +89,7 @@ public class OctoHeatmapChart extends OctoBaseChart{
         listOfStructField.add(DataTypes.createStructField(colHeader, DataTypes.StringType, true));
         StructType structType=DataTypes.createStructType(listOfStructField);
         Dataset<Row> df_x = sparkWorker.createDataFrame(list,structType);
-        super.updateChartData(this.sparkWorker,df_x,this.uid,this.workunitClass,this.workunitName,this.summaryName,this.tableNameShort);
+        super.updateChartData(this.sparkWorker,df_x,this.uid,this.workunitClass,this.workunitName,this.wuRevision,this.summaryName,this.tableNameShort);
     }
     public void setDashboardtitle(String dashboardtitle){
         this.dashboardtitle = dashboardtitle;
