@@ -3,9 +3,7 @@ package org.grafana.api.driver;
 import org.apache.spark.sql.Dataset;
 import org.apache.spark.sql.Row;
 import org.apache.spark.sql.SparkSession;
-import org.grafana.api.octocharts.OctoBarChart;
-
-import java.util.Properties;
+import org.grafana.api.octocharts.*;
 
 public class OctoExample {
     public static void main(String[] args){
@@ -15,38 +13,28 @@ public class OctoExample {
                 .appName("Java Spark SQL basic example")
                 .config("spark.some.config.option", "some-value")
                 .getOrCreate();
-        Properties connectionProperties = new Properties();
-        connectionProperties.put("user", System.getenv("GRAFANA_POSTGRES_USERNAME"));
-        connectionProperties.put("password", System.getenv("GRAFANA_POSTGRES_PASSWORD"));
-        Dataset<Row> df =spark.read()
-                .jdbc("jdbc:postgresql://"+System.getenv("GRAFANA_POSTGRES_URL")+"/"+System.getenv("GRAFANA_POSTGRES_DB"), "table1", connectionProperties);
-        Dataset<Row> df2 =spark.read()
-                .jdbc("jdbc:postgresql://"+System.getenv("GRAFANA_POSTGRES_URL")+"/"+System.getenv("GRAFANA_POSTGRES_DB"), "mytable", connectionProperties);
 
-        Dataset<Row> df3 =spark.read()
-                .jdbc("jdbc:postgresql://"+System.getenv("GRAFANA_POSTGRES_URL")+"/"+System.getenv("GRAFANA_POSTGRES_DB"), "sample_heatmap_table", connectionProperties);
+        Dataset<Row> df1 = spark.read().format("csv").option("header","true").load("D:/temp/heatmap_data/sample1.csv");
 
+        Dataset<Row> df2 = spark.read().format("csv").option("header","true").load("D:/temp/line_chart_data/cards_activation.csv");
 
-        OctoBarChart octoBarChart = new OctoBarChart(spark,"ABCDE",df,"asd.abcd.worker", "adsd.abc.Sampleworkunit","SampleSummary","xdata","ydata","Bar chart");
-        octoBarChart.setTrace("a","b");
+        OctoBarChart octoBarChart = new OctoBarChart(spark,"ABCDM",df1,"asd.abcd.worker", "adsd.abc.Sampleworkunit","01","abcd.Sample Summary-2","xdata","ydata");
+        octoBarChart.setTrace("employees","jan");
         octoBarChart.publish();
 
-        /*
-        OctoLineChart octoLineChart = new OctoLineChart(spark,"ABCDE",df2,"","Lineworkunit","LineSummary","Line chart");
+        OctoLineChart octoLineChart = new OctoLineChart(spark,"ABCDM",df2,"asd.abcd.worker","Lineworkunit","01","Line_summary(tumri)");
         octoLineChart.setTimeColumn("year_month");
-        octoLineChart.setColumns("varejo AS \"Varejo\",vestuario AS \"Vestuario\",\"serviÇo\" AS \"Serviço\",supermercados AS \"Supermercados\",restaurante AS \"Restaurante\", \"posto_de_gas\" AS \"Posto De Gas\"");
+        octoLineChart.setColumns("activation_percentage_30_days,activation_percentage_60_days,activation_percentage_90_days");
         octoLineChart.publish();
 
-        OctoHeatmapChart octoHeatmapChart = new OctoHeatmapChart(spark,"ABCDE",df3,"", "Heatworkunit","HeatSummary","xdata","ydata","Heatmap chart");
-        octoHeatmapChart.setTrace("category","category","i0");
-        octoHeatmapChart.setTarget("category");
-        octoHeatmapChart.setTarget("i0,i1,i2,i3,i4");
+        OctoHeatmapChart octoHeatmapChart = new OctoHeatmapChart(spark,"ABCDM",df1,"abcd.sampleworkunit_2", "Heatworkunit","01","HeatSummary,","xdata","ydata");
+        octoHeatmapChart.setXaxis("jan,feb,mar"); //Always a string containing either (one column header) or  (List of column headers)
+        octoHeatmapChart.setYaxis("employees");
         octoHeatmapChart.publish();
 
-        OctoTableChart octoTableChart = new OctoTableChart(spark,"ABCDE",df3, "", "Tableworkunit","TableSummary","Table chart");
-        octoTableChart.setColumns("category,i0");
+        OctoTableChart octoTableChart = new OctoTableChart(spark,"ABCDM",df1, "abcd.sampleworkunit_2", "Tableworkunit","01","TableSummary:");
+        octoTableChart.setColumns("employees,jan");
         octoTableChart.publish();
-         */
 
         spark.stop();
 

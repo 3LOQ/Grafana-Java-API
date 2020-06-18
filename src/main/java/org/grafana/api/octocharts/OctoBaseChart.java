@@ -12,9 +12,9 @@ import org.grafana.api.templates.Dashboard.CreateUpdateDashboardTpl;
 import org.grafana.api.responses.Dashboard.NewCreateUpdateDashboardRsp;
 import org.grafana.api.templates.Dashboard.abstractbasepanel.BasePanelTpl;
 
+import java.time.format.DateTimeFormatter;
 import java.util.Properties;
 import java.util.logging.Logger;
-
 import java.time.LocalDateTime;
 
 public abstract class OctoBaseChart {
@@ -49,7 +49,9 @@ public abstract class OctoBaseChart {
             dashItems.setUid(uid);
             if (dashboardtitle == null) {
                 LocalDateTime localDt= LocalDateTime.now();
-                dashItems.setTitle(workunitName.substring(workunitName.lastIndexOf('.') + 1) +"_"+localDt);
+                DateTimeFormatter format = DateTimeFormatter.ofPattern("dd-MMM-yyyy HH:mm:ss");
+                String formattedDateTime = localDt.format(format);
+                dashItems.setTitle(uid +"_"+formattedDateTime);
             }else{
                 dashItems.setTitle(dashboardtitle);
             }
