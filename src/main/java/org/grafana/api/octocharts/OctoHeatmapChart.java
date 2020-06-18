@@ -29,7 +29,7 @@ public class OctoHeatmapChart extends OctoBaseChart{
     public String ymapping;
     public String zmapping;
 
-    public OctoHeatmapChart(SparkSession spark, String dashboarduid, Dataset<Row> df, String workunitClass, String workunitName, String summaryname, String xtitle, String ytitle, String paneltitle){
+    public OctoHeatmapChart(SparkSession spark, String dashboarduid, Dataset<Row> df, String workunitClass, String workunitName,String wuRevision, String summaryname, String xtitle, String ytitle){
         this.sparkWorker = spark;
         this.uid = dashboarduid;
         this.df_main = df;
@@ -37,12 +37,12 @@ public class OctoHeatmapChart extends OctoBaseChart{
         this.heatmapPanel = new PlotlyHeatmapPanelChart();
         this.heatmapPanel.setDatasource(System.getenv("GRAFANA_POSTGRES_DATASOURCE"));
         this.heatmapPanel.setPconfig(xtitle,ytitle);
-        this.heatmapPanel.setTitle(paneltitle);
+        this.heatmapPanel.setTitle(workunitName.substring(workunitName.lastIndexOf('.') + 1) + "_" + wuRevision + "_" + summaryname.substring(summaryname.lastIndexOf('.') + 1));
         this.workunitClass = workunitClass;
         this.workunitName = workunitName;
         this.summaryName = summaryname;
-        this.tableNameLarge=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1) + "_1").toLowerCase();
-        this.tableNameShort=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1) + "_2").toLowerCase();
+        this.tableNameLarge=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1) + "_1").toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
+        this.tableNameShort=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1) + "_2").toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
         super.updateChartData(this.sparkWorker,df,this.uid,this.workunitClass,this.workunitName,this.summaryName,this.tableNameLarge);
     }
 
@@ -57,7 +57,7 @@ public class OctoHeatmapChart extends OctoBaseChart{
         if (arr.size() > 1){
             this.zmapping = xaxis_cols;
             this.xmapping = "xlabel";
-            this.heatmapPanel.setTargets(String.format("select %s from %s where dashboardid = \'%s\' and workunitname = \'%s\' order by %s",this.xmapping,this.tableNameShort,this.uid, this.workunitName,this.xmapping));
+            this.heatmapPanel.setTargets(String.format("select %s from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' order by %s",this.xmapping,this.tableNameShort,this.uid, this.workunitName,this.xmapping));
             convertToDataFrameAndPersist(arr,this.xmapping);
         }
         else{
@@ -75,8 +75,8 @@ public class OctoHeatmapChart extends OctoBaseChart{
     }
     public void setYaxis(String columnNames){
         this.ymapping = columnNames;
-        this.heatmapPanel.setTargets(String.format("select \"%s\" from %s where dashboardid = \'%s\' and workunitname = \'%s\' order by \"%s\"",this.ymapping,this.tableNameLarge,this.uid, this.workunitName,this.ymapping));
-        this.heatmapPanel.setTargets(String.format("select %s from %s where dashboardid = \'%s\' and workunitname = \'%s\' order by \"%s\"", this.zmapping,this.tableNameLarge,this.uid, this.workunitName,this.ymapping));
+        this.heatmapPanel.setTargets(String.format("select \"%s\" from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' order by \"%s\"",this.ymapping,this.tableNameLarge,this.uid, this.workunitName,this.ymapping));
+        this.heatmapPanel.setTargets(String.format("select %s from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' order by \"%s\"", this.zmapping,this.tableNameLarge,this.uid, this.workunitName,this.ymapping));
     }
     public void convertToDataFrameAndPersist(List<String> arr,String colHeader){
         List<Row> list=new ArrayList<>();

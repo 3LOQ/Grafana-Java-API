@@ -16,27 +16,25 @@ public class OctoBarChart extends OctoBaseChart{
     private final String workunitName;
     public PlotlyPanelChart barpanel;
 
-    public OctoBarChart(SparkSession spark,String dashboarduid, Dataset<Row> df, String workunitName, String workunitClass, String summaryname, String xtitle, String ytitle, String paneltitle){
+    public OctoBarChart(SparkSession spark,String dashboarduid, Dataset<Row> df,String workunitClass,String workunitName,String wuRevision, String summaryname, String xtitle, String ytitle){
 
-        log.info("Octo Bar Chart Spark Session Id: " + spark +" Panel Title : " +paneltitle);
+        log.info("Bar chart being created with dashboardid :" + dashboarduid);
 
         this.uid = dashboarduid;
         this.dashboardTitle = null;
         this.barpanel = new PlotlyPanelChart();
         this.barpanel.setDatasource(System.getenv("GRAFANA_POSTGRES_DATASOURCE"));
         this.barpanel.setPconfig(xtitle,ytitle,"bar");
-        this.barpanel.setTitle(paneltitle);
+        this.barpanel.setTitle(workunitName.substring(workunitName.lastIndexOf('.') + 1) + "_" + wuRevision + "_" + summaryname.substring(summaryname.lastIndexOf('.') + 1));
         this.workunitClass = workunitClass;
         this.workunitName = workunitName;
-        this.tableName=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1)).toLowerCase();
+        this.tableName=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1)).toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
         this.updateChartData(spark,df,dashboarduid,workunitClass,workunitName,summaryname,this.tableName);
-
-
     }
     public void setTrace(String xmapping,String ymapping){
         log.info("X Mapping :"+xmapping+" Y Mapping : "+ymapping);
         this.barpanel.setTraces(xmapping,ymapping);
-        this.barpanel.setTargets(String.format("select %s,%s from %s where dashboardid = \'%s\' and workunitname = \'%s\'",xmapping,ymapping,this.tableName,this.uid, this.workunitName));
+        this.barpanel.setTargets(String.format("select %s,%s from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\'",xmapping,ymapping,this.tableName,this.uid, this.workunitName));
     }
     public void setTarget(String query){
         log.info("Set Target ");
