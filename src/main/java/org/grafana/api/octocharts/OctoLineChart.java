@@ -18,7 +18,8 @@ public class OctoLineChart extends OctoBaseChart {
     private String columns;
     private String timecolumn;
     private final String workunitClass;
-    private String workunitName;
+    private final String workunitName;
+    private final String wuRevision;
     public LineGraphPanelTpl lineGraph;
 
     public OctoLineChart(SparkSession spark, String dashboarduid, Dataset<Row> df, String workunitClass, String workunitName,String wuRevision, String summaryname){
@@ -34,6 +35,7 @@ public class OctoLineChart extends OctoBaseChart {
         this.lineGraph.setLegend(lgl);
         this.workunitClass = workunitClass;
         this.workunitName = workunitName;
+        this.wuRevision = wuRevision;
         this.tableName=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1)).toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
         this.updateChartData(spark,df,dashboarduid,workunitClass,workunitName,wuRevision,summaryname,tableName);
     }
@@ -44,7 +46,7 @@ public class OctoLineChart extends OctoBaseChart {
         this.timecolumn = col;
     }
     public void publish(){
-        String query = String.format("SELECT\n  %s AS \"time\", %s FROM \"%s\" \nWHERE\n dashboardid = \'%s\' and workunitname = \'%s\' and $__timeFilter(%s)\nORDER BY 1",this.timecolumn,this.columns,this.tableName,this.dashboarduid,this.workunitName,this.timecolumn);
+        String query = String.format("SELECT\n  %s AS \"time\", %s FROM \"%s\" \nWHERE\n dashboardid = \'%s\' and workunitname = \'%s\' and wurevision = \'%s\' and $__timeFilter(%s)\nORDER BY 1",this.timecolumn,this.columns,this.tableName,this.dashboarduid,this.workunitName,this.wuRevision,this.timecolumn);
         this.lineGraph.setTargets(query,this.tableName,"time_series");
         try {
             super.publish(this.dashboarduid, this.dashboardtitle, this.lineGraph,this.workunitClass);

@@ -14,6 +14,7 @@ public class OctoBarChart extends OctoBaseChart{
     private final String tableName;
     private final String workunitClass;
     private final String workunitName;
+    private final String wuRevision;
     public PlotlyPanelChart barpanel;
 
     public OctoBarChart(SparkSession spark,String dashboarduid, Dataset<Row> df,String workunitClass,String workunitName,String wuRevision, String summaryname, String xtitle, String ytitle){
@@ -28,13 +29,14 @@ public class OctoBarChart extends OctoBaseChart{
         this.barpanel.setTitle(workunitName.substring(workunitName.lastIndexOf('.') + 1) + "_" + wuRevision + "_" + summaryname.substring(summaryname.lastIndexOf('.') + 1));
         this.workunitClass = workunitClass;
         this.workunitName = workunitName;
+        this.wuRevision = wuRevision;
         this.tableName=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1)).toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
         this.updateChartData(spark,df,dashboarduid,workunitClass,workunitName,wuRevision,summaryname,this.tableName);
     }
     public void setTrace(String xmapping,String ymapping){
         log.info("X Mapping :"+xmapping+" Y Mapping : "+ymapping);
         this.barpanel.setTraces(xmapping,ymapping);
-        this.barpanel.setTargets(String.format("select %s,%s from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\'",xmapping,ymapping,this.tableName,this.uid, this.workunitName));
+        this.barpanel.setTargets(String.format("select %s,%s from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' and wurevision = \'%s\'",xmapping,ymapping,this.tableName,this.uid, this.workunitName,this.wuRevision));
     }
     public void setTarget(String query){
         log.info("Set Target ");
