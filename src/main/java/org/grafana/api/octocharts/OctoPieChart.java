@@ -6,12 +6,13 @@ import org.apache.spark.sql.SparkSession;
 import org.grafana.api.templates.Dashboard.GrafanaPanel.PieChartPanelTpl;
 
 public class OctoPieChart extends OctoBaseChart {
-    private String dashboarduid;
+    private final String dashboarduid;
     private String dashboardtitle;
-    private String tableName;
+    private final String tableName;
     private String columns;
-    private String workunitClass;
+    private final String workunitClass;
     private String workunitName;
+    private final String wuRevision;
     public PieChartPanelTpl piepanel;
 
     public OctoPieChart(SparkSession spark, String dashboarduid, Dataset<Row> df, String workunitClass, String workunitname,String wuRevision, String summaryname){
@@ -22,6 +23,7 @@ public class OctoPieChart extends OctoBaseChart {
         this.piepanel.setPieType("pie");
         this.workunitClass=workunitClass;
         this.workunitName=workunitname;
+        this.wuRevision = wuRevision;
         this.tableName=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1)).toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
         this.updateChartData(spark,df,dashboarduid,workunitClass,workunitname,wuRevision,summaryname,tableName);
     }
@@ -34,7 +36,7 @@ public class OctoPieChart extends OctoBaseChart {
     }
 
     public void publish(){
-        String query = String.format("SELECT\n now() as time, %s FROM \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\'",this.columns,this.tableName,this.dashboarduid, this.workunitName);
+        String query = String.format("SELECT\n now() as time, %s FROM \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' and wurevision = \'%s\'" ,this.columns,this.tableName,this.dashboarduid, this.workunitName,this.wuRevision);
         this.piepanel.setTargets(query,"time_series");
         super.publish(this.dashboarduid,this.dashboardtitle,this.piepanel,this.workunitClass);
     }

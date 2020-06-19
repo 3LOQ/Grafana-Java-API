@@ -59,7 +59,7 @@ public class OctoHeatmapChart extends OctoBaseChart{
         if (arr.size() > 1){
             this.zmapping = xaxis_cols;
             this.xmapping = "xlabel";
-            this.heatmapPanel.setTargets(String.format("select %s from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' order by %s",this.xmapping,this.tableNameShort,this.uid, this.workunitName,this.xmapping));
+            this.heatmapPanel.setTargets(String.format("select %s from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' and wurevision = \'%s\' order by %s",this.xmapping,this.tableNameShort,this.uid, this.workunitName,this.wuRevision,this.xmapping));
             convertToDataFrameAndPersist(arr,this.xmapping);
         }
         else{
@@ -77,8 +77,8 @@ public class OctoHeatmapChart extends OctoBaseChart{
     }
     public void setYaxis(String columnNames){
         this.ymapping = columnNames;
-        this.heatmapPanel.setTargets(String.format("select \"%s\" from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' order by \"%s\"",this.ymapping,this.tableNameLarge,this.uid, this.workunitName,this.ymapping));
-        this.heatmapPanel.setTargets(String.format("select %s from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' order by \"%s\"", this.zmapping,this.tableNameLarge,this.uid, this.workunitName,this.ymapping));
+        this.heatmapPanel.setTargets(String.format("select \"%s\" from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' and wurevision = \'%s\' order by \"%s\"",this.ymapping,this.tableNameLarge,this.uid, this.workunitName,this.wuRevision,this.ymapping));
+        this.heatmapPanel.setTargets(String.format("select %s from \"%s\" where dashboardid = \'%s\' and workunitname = \'%s\' and wurevision = \'%s\' order by \"%s\"", this.zmapping,this.tableNameLarge,this.uid, this.workunitName,this.wuRevision,this.ymapping));
     }
     public void convertToDataFrameAndPersist(List<String> arr,String colHeader){
         List<Row> list=new ArrayList<>();
