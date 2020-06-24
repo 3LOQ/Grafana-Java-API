@@ -18,23 +18,28 @@ public class OctoExample {
 
         Dataset<Row> df2 = spark.read().format("csv").option("header","true").load("D:/temp/line_chart_data/cards_activation.csv");
 
-        OctoBarChart octoBarChart = new OctoBarChart(spark,"ABCDP",df1,"asd.abcd.worker", "adsd.abc.Sampleworkunit","01","abcd.Sample Summary-2","xdata","ydata");
+        OctoBarChart octoBarChart = new OctoBarChart(spark,"ABCDR",df1,"asd.abcd.worker", "adsd.abc.Sampleworkunit","01","abcd.Sample Summary-2","xdata","ydata");
         octoBarChart.setTrace("employees","jan");
         octoBarChart.publish();
 
-        OctoLineChart octoLineChart = new OctoLineChart(spark,"ABCDP",df2,"asd.abcd.worker","Lineworkunit","01","Line_summary(tumri)");
+        OctoLineChart octoLineChart = new OctoLineChart(spark,"ABCDR",df2,"asd.abcd.worker","Lineworkunit","01","Line_summary(tumri)");
         octoLineChart.setTimeColumn("year_month");
         octoLineChart.setColumns("activation_percentage_30_days,activation_percentage_60_days,activation_percentage_90_days");
         octoLineChart.publish();
 
-        OctoHeatmapChart octoHeatmapChart = new OctoHeatmapChart(spark,"ABCDP",df1,"abcd.sampleworkunit_2", "Heatworkunit","01","HeatSummary,","xdata","ydata");
+        OctoHeatmapChart octoHeatmapChart = new OctoHeatmapChart(spark,"ABCDR",df1,"abcd.sampleworkunit_2", "Heatworkunit","01","HeatSummary,","xdata","ydata");
         octoHeatmapChart.setXaxis("jan,feb,mar"); //Always a string containing either (one column header) or  (List of column headers)
         octoHeatmapChart.setYaxis("employees");
         octoHeatmapChart.publish();
 
-        OctoTableChart octoTableChart = new OctoTableChart(spark,"ABCDP",df1, "abcd.sampleworkunit_2", "Tableworkunit","01","TableSummary:");
+        OctoTableChart octoTableChart = new OctoTableChart(spark,"ABCDR",df1, "abcd.sampleworkunit_2", "Tableworkunit","01","TableSummary:");
         octoTableChart.setColumns("employees,jan");
         octoTableChart.publish();
+        
+        OctoPieChart octoPieChart = new OctoPieChart(spark,"ABCDR",df1, "abcd.sampleworkunit_2", "Tableworkunit","01","TableSummary:");
+        octoPieChart.setColumns("jan,feb");
+        octoPieChart.setPietype("donut");
+        octoPieChart.publish();
 
         spark.stop();
 

@@ -15,17 +15,17 @@ public class OctoPieChart extends OctoBaseChart {
     private final String wuRevision;
     public PieChartPanelTpl piepanel;
 
-    public OctoPieChart(SparkSession spark, String dashboarduid, Dataset<Row> df, String workunitClass, String workunitname,String wuRevision, String summaryname){
+    public OctoPieChart(SparkSession spark, String dashboarduid, Dataset<Row> df, String workunitClass, String workunitName,String wuRevision, String summaryname){
         this.dashboarduid = dashboarduid;
         this.piepanel = new PieChartPanelTpl();
         this.piepanel.setDatasource(System.getenv("GRAFANA_POSTGRES_DATASOURCE"));
         this.piepanel.setTitle(workunitName.substring(workunitName.lastIndexOf('.') + 1) + "_" + wuRevision + "_" + summaryname.substring(summaryname.lastIndexOf('.') + 1));
         this.piepanel.setPieType("pie");
         this.workunitClass=workunitClass;
-        this.workunitName=workunitname;
+        this.workunitName=workunitName;
         this.wuRevision = wuRevision;
         this.tableName=(workunitClass.substring(workunitClass.lastIndexOf('.') + 1) +"_"+ summaryname.substring(summaryname.lastIndexOf('.') + 1)).toLowerCase().replaceAll("[!@#$%^&*()--+={}:';|<>,.?/~` ]","_");
-        this.updateChartData(spark,df,dashboarduid,workunitClass,workunitname,wuRevision,summaryname,tableName);
+        this.updateChartData(spark,df,dashboarduid,workunitClass,workunitName,wuRevision,summaryname,tableName);
     }
 
     public void setColumns(String columns) {
