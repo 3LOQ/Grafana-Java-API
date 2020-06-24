@@ -20,7 +20,7 @@ public class OctoStatChart extends OctoBaseChart {
         this.dashboardtitle = null;
 
         this.statpanel = new StatChartTpl();
-        this.statpanel.setDatasource(System.getenv("POSTGRES_DATASOURCE"));
+        this.statpanel.setDatasource(System.getenv("GRAFANA_POSTGRES_DATASOURCE"));
         this.statpanel.setTitle(workunitName.substring(workunitName.lastIndexOf('.') + 1) + "_" + wuRevision + "_" + summaryname.substring(summaryname.lastIndexOf('.') + 1));
         this.statpanel.setType("stat");
         this.workunitClass = workunitClass;
