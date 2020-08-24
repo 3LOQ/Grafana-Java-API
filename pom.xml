@@ -92,7 +92,7 @@
     <repository>
       <id>github</id>
       <name>GitHub Packages</name>
-      <url>https://maven.pkg.github.com/rupesh3loq/sample_maven</url>
+      <url>https://maven.pkg.github.com/3LOQ/Grafana-Java-API</url>
     </repository>
   </distributionManagement>
 </project>
