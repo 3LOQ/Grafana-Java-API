@@ -88,5 +88,11 @@
         </dependency>
 
     </dependencies>
-
+   <distributionManagement>
+    <repository>
+      <id>github</id>
+      <name>GitHub Packages</name>
+      <url>https://maven.pkg.github.com/rupesh3loq/sample_maven</url>
+    </repository>
+  </distributionManagement>
 </project>
