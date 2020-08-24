@@ -6,7 +6,7 @@
 
     <groupId>com.triloq</groupId>
     <artifactId>GrafanaAPI-Java-API</artifactId>
-    <version>PACKAGE_VERSION</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <build>
